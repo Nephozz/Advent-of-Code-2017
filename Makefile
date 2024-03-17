@@ -2,7 +2,7 @@
 CC = gcc
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -std=c11
+CFLAGS = -Wall -Wextra -std=c11 -g
 
 # Source directory
 SRC_DIR = src
@@ -10,25 +10,34 @@ SRC_DIR = src
 # Object directory
 OBJ_DIR = bin
 
+# Include directory
+INC_DIR = include
+
 # Source files
 SRCS = $(wildcard $(SRC_DIR)/*.c)
+
+# Files to exclude
+EXCLUDE_SRCS = src/reader.c src/foo.c
+
+# Filtered source files (excluding files in EXCLUDE_SRCS)
+FILTERED_SRCS = $(filter-out $(EXCLUDE_SRCS), $(SRCS))
 
 # Object files
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Executable names
-TARGETS = $(patsubst $(SRC_DIR)/%.c, %, $(SRCS))
+TARGETS = $(patsubst $(SRC_DIR)/%.c, %, $(FILTERED_SRCS))
 
 # Default rule to build all executables
 all: $(TARGETS)
 
 # Rule to build each executable
 $(TARGETS): % : $(OBJ_DIR)/%.o
-	$(CC) $(CFLAGS) $< -o $(OBJ_DIR)/$@
+	$(CC) $(CFLAGS) $< -o $(OBJ_DIR)/$@ -I$(INC_DIR)
 
 # Rule to compile source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -I$(INC_DIR)
 
 # Create bin directory if it doesn't exist
 $(shell mkdir -p $(OBJ_DIR))
