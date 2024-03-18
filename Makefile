@@ -16,17 +16,11 @@ INC_DIR = include
 # Source files
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 
-# Files to exclude
-EXCLUDE_SRCS = src/reader.c src/foo.c
-
-# Filtered source files (excluding files in EXCLUDE_SRCS)
-FILTERED_SRCS = $(filter-out $(EXCLUDE_SRCS), $(SRCS))
-
 # Object files
 OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
 # Executable names
-TARGETS = $(patsubst $(SRC_DIR)/%.c, %, $(FILTERED_SRCS))
+TARGETS = $(patsubst $(SRC_DIR)/%.c, %, $(SRCS))
 
 # Default rule to build all executables
 all: $(TARGETS)
